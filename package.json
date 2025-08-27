@@ -1,0 +1,15 @@
+{
+  "name": "keep-alive-bot",
+  "version": "1.0.0",
+  "description": "Keep-alive bot for Render free tier",
+  "main": "keep-alive-bot.js",
+  "scripts": {
+    "start": "node keep-alive-bot.js"
+  },
+  "dependencies": {
+    "node-fetch": "^2.6.1"
+  },
+  "engines": {
+    "node": "20.x"
+  }
+}
