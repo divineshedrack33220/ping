@@ -26,7 +26,7 @@ const RANDOM_URLS = process.env.RANDOM_URLS
     ];
 
 // Dedicated URL to ping every 10 minutes
-const DEDICATED_URL = process.env.DEDICATED_URL || "https://biege.onrender.com/priority"; // Replace with actual URL
+const DEDICATED_URL = process.env.DEDICATED_URL || "https://ping-tasp.onrender.com"; // Replace with actual URL
 
 // Self-ping URL (set dynamically after server starts)
 let SELF_PING_URL = null;
