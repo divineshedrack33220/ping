@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Keep-Alive Bot Status</title>
+</head>
+<body>
+  <div class="container">
+    <!-- Header -->
+    <header class="header">
+      <div class="header-left">
+        <div class="logo">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="var(--accent-color)" style="display: block;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm0-14c-3.31 0-6 2.69-6 6s2.69 6 6 6 6-2.69 6-6-2.69-6-6-6z"/></svg>
+        </div>
+        <div class="header-text">
+          <h1>Keep-Alive Bot</h1>
+          <p>Real-Time Monitoring</p>
+        </div>
+      </div>
+      <div class="header-right">
+        <div class="live-indicator"></div>
+        <span>Live</span>
+        <button class="theme-toggle" onclick="toggleTheme()" aria-label="Toggle dark mode">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--text-color)"><path d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M12 5a7 7 0 100 14 7 7 0 000-14z"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Stats Overview -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-header">
+          <p>Uptime</p>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent-color)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+        </div>
+        <h3 id="uptime-stat">Loading...</h3>
+        <div class="progress-bar"><div id="uptime-bar"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <p>Response Time</p>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent-color)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm4.83-12.55-5.84 5.84-2.12-2.12-1.41 1.41 3.53 3.53 7.07-7.07z"/></svg>
+        </div>
+        <h3 id="response-stat">Loading...</h3>
+        <div class="progress-bar"><div id="response-bar"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <p>Success Rate</p>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent-color)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h3l-4 4-4-4h3z"/></svg>
+        </div>
+        <h3 id="success-stat">Loading...</h3>
+        <div class="progress-bar"><div id="success-bar"></div></div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-header">
+          <p>Last Check</p>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent-color)"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm1-13h-2v6l5.25 3.15.75-1.23-4.5-2.67z"/></svg>
+        </div>
+        <h3 id="last-checked">N/A</h3>
+        <div class="progress-bar"><div style="width: 100%; background: var(--accent-color);"></div></div>
+      </div>
+    </div>
+
+    <!-- Site Status Card -->
+    <div class="status-card">
+      <div class="card-header">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent-color)" style="display: inline-block; margin-right: 8px; vertical-align: middle;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+          Site Status
+        </h2>
+        <div class="refresh-info">
+          <span>Auto-refresh in</span>
+          <div id="refresh-timer">30s</div>
+        </div>
+      </div>
+      <div id="site-status" role="status" aria-live="polite" class="status-content">
+        <div class="status-left">
+          <div id="status-indicator"></div>
+          <span id="status-text">Checking status...</span>
+        </div>
+        <div id="status-details">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--secondary-text)" style="display: inline-block; vertical-align: middle; animation: spin 1s linear infinite;"><path d="M12 4V2L8 6l4 4V8c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          Connecting...
+        </div>
+      </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <div class="action-buttons">
+      <button onclick="fetchLogs(); fetchSiteStatus(); fetchStats();" aria-label="Refresh data">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--button-text)" style="margin-right: 8px;"><path d="M12 4V2L8 6l4 4V8c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        Refresh
+      </button>
+      <a href="https://biege.onrender.com" target="_blank" style="text-decoration: none;">
+        <button aria-label="Visit site">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--button-text)" style="margin-right: 8px;"><path d="M12 4v8l3.2 1.6-3.2 1.6v8h-2v-8l-3.2-1.6L10 12V4h2z"/></svg>
+          Visit Site
+        </button>
+      </a>
+      <button onclick="retryFetch()" aria-label="Retry fetch">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--button-text)" style="margin-right: 8px;"><path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+        Retry
+      </button>
+    </div>
+
+    <!-- Logs Section -->
+    <div class="logs-card">
+      <div class="card-header">
+        <h2>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="var(--accent-color)" style="display: inline-block; margin-right: 8px; vertical-align: middle;"><path d="M20 2H4c-1.1 0-2 .9-2 2v16c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm0 18H4V4h16v16zM6 6h12v2H6V6zm0 4h12v2H6v-2zm0 4h12v2H6v-2zm0 4h12v2H6v-2z"/></svg>
+          Ping Logs
+        </h2>
+        <div class="log-count">
+          <span>Log Count:</span>
+          <div id="log-count">0</div>
+        </div>
+      </div>
+      <div id="logs" class="logs-content">
+        <div class="loading-logs">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="var(--secondary-text)" style="animation: spin 1s linear infinite;"><path d="M12 4V2L8 6l4 4V8c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z"/></svg>
+          Loading logs...
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="footer">
+      <span>AI Monitoring System v2.0</span>
+      <span>|</span>
+      <span>Last Updated: <span id="current-time"></span></span>
+      <span>|</span>
+      <span>All Systems <span style="color: var(--success-color);">Operational</span></span>
+    </footer>
+  </div>
+
+  <style>
+    :root {
+      --background: linear-gradient(135deg, #e6e9f0 0%, #b3c8e8 100%);
+      --card-bg: #ffffff;
+      --text-color: #1a1a1a;
+      --secondary-text: #6b7280;
+      --accent-color: #3b82f6;
+      --success-color: #10b981;
+      --error-color: #ef4444;
+      --warning-color: #f59e0b;
+      --button-bg: linear-gradient(45deg, #3b82f6, #60a5fa);
+      --button-text: #ffffff;
+      --progress-bg: #e5e7eb;
+      --shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    [data-theme="dark"] {
+      --background: linear-gradient(135deg, #0d1b2a 0%, #1b263b 100%);
+      --card-bg: #1e2a44;
+      --text-color: #e0e1dd;
+      --secondary-text: #a5a9b4;
+      --accent-color: #00ddeb;
+      --success-color: #00ff99;
+      --error-color: #ff4d4d;
+      --warning-color: #ffb84d;
+      --button-bg: linear-gradient(45deg, #00ddeb, #4de4ff);
+      --progress-bg: #2a3b5b;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Orbitron', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    }
+
+    body {
+      background: var(--background);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 1rem;
+      font-size: 16px;
+    }
+
+    .container {
+      max-width: 100%;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--progress-bg);
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .logo {
+      background: var(--accent-color);
+      padding: 0.5rem;
+      border-radius: 0.5rem;
+    }
+
+    .header-text h1 {
+      font-size: 1.5rem;
+      color: var(--text-color);
+      font-weight: 600;
+    }
+
+    .header-text p {
+      font-size: 0.875rem;
+      color: var(--secondary-text);
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .live-indicator {
+      width: 0.75rem;
+      height: 0.75rem;
+      background: var(--accent-color);
+      border-radius: 50%;
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+    }
+
+    .header-right span {
+      font-size: 0.875rem;
+      color: var(--secondary-text);
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 0.5rem;
+      transition: transform 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: scale(1.1);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+
+    .stat-card:hover {
+      transform: scale(1.02);
+      box-shadow: 0 6px 24px rgba(0,0,0,0.2);
+    }
+
+    .stat-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .stat-header p {
+      font-size: 0.875rem;
+      color: var(--secondary-text);
+    }
+
+    .stat-card h3 {
+      font-size: 1.25rem;
+      color: var(--text-color);
+      margin: 0.5rem 0 0;
+      font-weight: 600;
+    }
+
+    .progress-bar {
+      width: 100%;
+      background: var(--progress-bg);
+      border-radius: 0.25rem;
+      height: 0.375rem;
+      margin-top: 0.5rem;
+    }
+
+    .progress-bar div {
+      height: 100%;
+      border-radius: 0.25rem;
+      transition: width 0.5s ease;
+    }
+
+    #uptime-bar { background: var(--accent-color); }
+    #response-bar { background: var(--success-color); }
+    #success-bar { background: #8b5cf6; }
+
+    .status-card, .logs-card {
+      background: var(--card-bg);
+      padding: 1.25rem;
+      border-radius: 0.5rem;
+      box-shadow: var(--shadow);
+      margin-bottom: 1rem;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .card-header h2 {
+      font-size: 1.25rem;
+      color: var(--text-color);
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+    }
+
+    .refresh-info, .log-count {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .refresh-info span, .log-count span {
+      font-size: 0.875rem;
+      color: var(--secondary-text);
+    }
+
+    .refresh-info div, .log-count div {
+      background: var(--progress-bg);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0.25rem;
+      font-size: 0.875rem;
+      color: var(--text-color);
+    }
+
+    .status-content {
+      margin-top: 1rem;
+      padding: 1rem;
+      border-radius: 0.375rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+    }
+
+    .status-left {
+      display: flex;
+      align-items: center;
+      gap: 0.625rem;
+    }
+
+    #status-indicator {
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      background: var(--secondary-text);
+      animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+      box-shadow: 0 0 10px var(--accent-color);
+    }
+
+    #status-text {
+      font-size: 1rem;
+      font-weight: 600;
+      color: var(--text-color);
+    }
+
+    #status-details {
+      font-size: 0.875rem;
+      color: var(--secondary-text);
+    }
+
+    .action-buttons {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .action-buttons button, .action-buttons a button {
+      padding: 0.75rem 1.5rem;
+      background: var(--button-bg);
+      color: var(--button-text);
+      border: none;
+      border-radius: 0.375rem;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      display: flex;
+      align-items: center;
+      touch-action: manipulation;
+    }
+
+    .action-buttons button:hover, .action-buttons a button:hover {
+      transform: scale(1.05);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      filter: brightness(1.1);
+    }
+
+    .action-buttons a:nth-child(2) button {
+      background: linear-gradient(45deg, var(--success-color), #34d399);
+    }
+
+    .action-buttons button:last-child {
+      background: linear-gradient(45deg, var(--warning-color), #fbbf24);
+    }
+
+    .logs-content {
+      background: var(--card-bg);
+      padding: 1rem;
+      border-radius: 0.375rem;
+      max-height: 400px;
+      overflow-y: auto;
+      font-family: 'Courier New', monospace;
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--text-color);
+    }
+
+    .loading-logs {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--secondary-text);
+    }
+
+    .log-entry {
+      border-left: 3px solid;
+      padding-left: 0.75rem;
+      margin-bottom: 0.5rem;
+      transition: all 0.2s ease;
+    }
+
+    .log-entry:hover {
+      background: rgba(255,255,255,0.1);
+    }
+
+    .success-log { border-color: var(--success-color); }
+    .error-log { border-color: var(--error-color); }
+    .info-log { border-color: var(--accent-color); }
+    .warning-log { border-color: var(--warning-color); }
+
+    .logs-content::-webkit-scrollbar {
+      width: 8px;
+    }
+
+    .logs-content::-webkit-scrollbar-track {
+      background: var(--progress-bg);
+    }
+
+    .logs-content::-webkit-scrollbar-thumb {
+      background: var(--accent-color);
+      border-radius: 4px;
+    }
+
+    .footer {
+      text-align: center;
+      font-size: 0.875rem;
+      color: var(--secondary-text);
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid var(--progress-bg);
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    @media (max-width: 390px) {
+      body { padding: 0.5rem; font-size: 14px; }
+      .container { padding: 1rem; }
+      .header-text h1 { font-size: 1.25rem; }
+      .header-text p { font-size: 0.75rem; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .stat-card h3 { font-size: 1.125rem; }
+      .action-buttons button, .action-buttons a button { padding: 0.5rem 1rem; font-size: 0.875rem; }
+      .logs-content { max-height: 300px; }
+    }
+  </style>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.dataset.theme = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+      localStorage.setItem('theme', document.documentElement.dataset.theme);
+    }
+
+    if (localStorage.getItem('theme') === 'dark') {
+      document.documentElement.dataset.theme = 'dark';
+    }
+
+    let isFetching = false;
+    let retryAttempts = 0;
+    const maxRetries = 3;
+
+    async function fetchWithRetry(url, options = {}) {
+      for (let attempt = 1; attempt <= maxRetries; attempt++) {
+        try {
+          const response = await fetch(url, { ...options, timeout: 10000 });
+          if (!response.ok) throw new Error(`HTTP ${response.status}`);
+          return await response.json();
+        } catch (err) {
+          if (attempt === maxRetries) {
+            console.error(`Failed to fetch ${url} after ${maxRetries} attempts: ${err.message}`);
+            throw err;
+          }
+          await new Promise(resolve => setTimeout(resolve, 2000 * attempt));
+        }
+      }
+    }
+
+    async function fetchSiteStatus() {
+      if (isFetching) return;
+      isFetching = true;
+      try {
+        startLoading();
+        const data = await fetchWithRetry("/api/site-status");
+        const statusText = document.getElementById("status-text");
+        const statusDetails = document.getElementById("status-details");
+        const statusIndicator = document.getElementById("status-indicator");
+        const lastCheckedDiv = document.getElementById("last-checked");
+        const siteStatusDiv = document.getElementById("site-status");
+
+        if (data.isLive) {
+          statusText.textContent = "Site is Live";
+          statusDetails.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--success-color)" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+            Operational
+          `;
+          siteStatusDiv.style.background = "rgba(16, 185, 129, 0.1)";
+          if (statusIndicator) statusIndicator.style.background = "var(--success-color)";
+        } else {
+          statusText.textContent = "Site is Down";
+          statusDetails.innerHTML = `
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--error-color)" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm4.2 14.8L12 13.59l-4.2 4.2-1.4-1.4L10.59 12 6.4 7.8l1.4-1.4L12 10.59l4.2-4.2 1.4 1.4L13.41 12l4.2 4.2z"/></svg>
+            Status: ${data.status || data.error || 'Unknown'}
+          `;
+          siteStatusDiv.style.background = "rgba(239, 68, 68, 0.1)";
+          if (statusIndicator) statusIndicator.style.background = "var(--error-color)";
+        }
+        lastCheckedDiv.textContent = formatTime(new Date(data.checkedAt || new Date()));
+        retryAttempts = 0;
+        updateCurrentTime();
+      } catch (err) {
+        const statusText = document.getElementById("status-text");
+        const statusDetails = document.getElementById("status-details");
+        const statusIndicator = document.getElementById("status-indicator");
+        const siteStatusDiv = document.getElementById("site-status");
+        statusText.textContent = "Error checking status";
+        statusDetails.innerHTML = `
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="var(--warning-color)" style="display: inline-block; vertical-align: middle; margin-right: 4px;"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15h-1v-5h1v5zm0-7h-1V7h1v3z"/></svg>
+          ${err.message || 'Network error'}
+        `;
+        siteStatusDiv.style.background = "rgba(245, 158, 11, 0.1)";
+        if (statusIndicator) statusIndicator.style.background = "var(--warning-color)";
+        document.getElementById("last-checked").textContent = "Error";
+      } finally {
+        stopLoading();
+        isFetching = false;
+      }
+    }
+
+    async function fetchLogs() {
+      if (isFetching) return;
+      isFetching = true;
+      try {
+        startLoading();
+        const data = await fetchWithRetry("/api/logs");
+        const logsContainer = document.getElementById("logs");
+        if (data.logs && data.logs.length > 0) {
+          logsContainer.innerHTML = '';
+          data.logs.forEach(log => {
+            const logElement = document.createElement('div');
+            logElement.className = `log-entry ${log.type}-log`;
+            logElement.innerHTML = `
+              <div style="font-size: 0.75rem; color: var(--secondary-text); margin-bottom: 0.25rem;">${formatTime(new Date(log.timestamp))}</div>
+              <div style="color: var(--text-color);">${log.message}</div>
+            `;
+            logsContainer.appendChild(logElement);
+          });
+          document.getElementById("log-count").textContent = data.logs.length;
+        } else {
+          logsContainer.innerHTML = '<div style="color: var(--secondary-text);">No logs available</div>';
+          document.getElementById("log-count").textContent = '0';
+        }
+        retryAttempts = 0;
+      } catch (err) {
+        document.getElementById("logs").innerHTML = `
+          <div class="log-entry error-log">
+            <div style="font-size: 0.75rem; color: var(--secondary-text); margin-bottom: 0.25rem;">${formatTime(new Date())}</div>
+            <div style="color: var(--text-color);">Error fetching logs: ${err.message}</div>
+          </div>
+        `;
+        document.getElementById("log-count").textContent = 'Error';
+      } finally {
+        stopLoading();
+        isFetching = false;
+      }
+    }
+
+    async function fetchStats() {
+      if (isFetching) return;
+      isFetching = true;
+      try {
+        const data = await fetchWithRetry("/api/stats");
+        updateStats(data);
+        retryAttempts = 0;
+      } catch (err) {
+        updateStats({
+          uptime: "Error",
+          responseTime: "Error",
+          successRate: "Error"
+        });
+      } finally {
+        isFetching = false;
+      }
+    }
+
+    async function retryFetch() {
+      retryAttempts++;
+      if (retryAttempts <= maxRetries) {
+        console.log(`Retrying fetch (attempt ${retryAttempts}/${maxRetries})...`);
+        await fetchLogs();
+        await fetchSiteStatus();
+        await fetchStats();
+      } else {
+        console.log("Max retry attempts reached.");
+        document.getElementById("logs").innerHTML = `
+          <div class="log-entry error-log">
+            <div style="font-size: 0.75rem; color: var(--secondary-text); margin-bottom: 0.25rem;">${formatTime(new Date())}</div>
+          <div style="color: var(--text-color);">Max retry attempts reached. Please check server status.</div>
+          </div>
+        `;
+      }
+    }
+
+    function formatTime(date) {
+      return date.toLocaleString('en-US', {
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit',
+        hour12: true
+      });
+    }
+
+    function updateStats(stats) {
+      document.getElementById("uptime-stat").textContent = stats.uptime || "Error";
+      document.getElementById("response-stat").textContent = stats.responseTime || "Error";
+      document.getElementById("success-stat").textContent = stats.successRate || "Error";
+      if (stats.uptime && stats.uptime !== "Error") {
+        const uptimeValue = parseFloat(stats.uptime) * 10;
+        document.getElementById("uptime-bar").style.width = `${Math.min(uptimeValue, 100)}%`;
+      } else {
+        document.getElementById("uptime-bar").style.width = "0%";
+      }
+      if (stats.responseTime && stats.responseTime !== "Error") {
+        const responseValue = Math.min(100, parseInt(stats.responseTime) / 10);
+        document.getElementById("response-bar").style.width = `${100 - responseValue}%`;
+      } else {
+        document.getElementById("response-bar").style.width = "0%";
+      }
+      if (stats.successRate && stats.successRate !== "Error") {
+        const successValue = parseFloat(stats.successRate);
+        document.getElementById("success-bar").style.width = `${successValue}%`;
+      } else {
+        document.getElementById("success-bar").style.width = "0%";
+      }
+    }
+
+    function updateCurrentTime() {
+      document.getElementById("current-time").textContent = formatTime(new Date());
+    }
+
+    function startLoading() {
+      const statusIndicator = document.getElementById("status-indicator");
+      if (statusIndicator) {
+        statusIndicator.style.animation = "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite";
+      }
+    }
+
+    function stopLoading() {
+      const statusIndicator = document.getElementById("status-indicator");
+      if (statusIndicator) {
+        statusIndicator.style.animation = "none";
+      }
+    }
+
+    let secondsLeft = 30;
+    function updateRefreshTimer() {
+      document.getElementById("refresh-timer").textContent = `${secondsLeft}s`;
+      secondsLeft--;
+      if (secondsLeft < 0) {
+        secondsLeft = 30;
+        fetchLogs();
+        fetchSiteStatus();
+        fetchStats();
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', () => {
+      fetchLogs();
+      fetchSiteStatus();
+      fetchStats();
+      setInterval(() => {
+        fetchLogs();
+        fetchSiteStatus();
+        fetchStats();
+      }, 30000);
+      setInterval(updateRefreshTimer, 1000);
+      setInterval(updateCurrentTime, 1000);
+    });
+  </script>
+</body>
+</html>
