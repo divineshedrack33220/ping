@@ -1,12 +1,13 @@
 {
   "name": "keep-alive-bot",
   "version": "1.0.0",
-  "description": "Keep-alive bot for Render free tier",
-  "main": "keep-alive-bot.js",
+  "description": "Keep-alive bot with frontend for Render Web Service",
+  "main": "app.js",
   "scripts": {
-    "start": "node keep-alive-bot.js"
+    "start": "node app.js"
   },
   "dependencies": {
+    "express": "^4.18.2",
     "node-fetch": "^2.6.1"
   },
   "engines": {
